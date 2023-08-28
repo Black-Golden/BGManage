@@ -36,12 +36,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	dbConnection, err := db.NewMysql(&config.Conf)
-	if err != nil {
-		logrus.Fatalf("connect to dbConnection error:%v", err)
-	}
+	dbEngine := db.GetDBEngine(&config.Conf)
 
-	apiService := api.NewApiService(dbConnection, &config.Conf)
+	apiService := api.NewApiService(dbEngine, &config.Conf)
 	go apiService.Run()
 
 	//listen kill signal

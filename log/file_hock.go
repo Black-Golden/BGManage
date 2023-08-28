@@ -2,19 +2,14 @@ package log
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"time"
-
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/sys/unix"
+	"os"
 )
 
 // AddFileOut only support unix os
 func AddFileOut(logFilePath string, level, days int) (err error) {
-	var absPath string
+	/*var absPath string
 	if absPath, err = filepath.Abs(logFilePath); err != nil {
 		return errors.WithStack(err)
 	}
@@ -54,7 +49,7 @@ func AddFileOut(logFilePath string, level, days int) (err error) {
 		rotate: logf,
 	}
 
-	logrus.AddHook(hook)
+	logrus.AddHook(hook)*/
 	return
 }
 

@@ -3,23 +3,22 @@ package api
 import (
 	"fmt"
 	"github.com/ethereum/api-in/config"
-	"github.com/ethereum/api-in/pkg/web/auth"
-	"github.com/ethereum/api-in/types"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-xorm/xorm"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type ApiService struct {
-	db     types.IDB
-	config *config.Config
+	dbEngine *xorm.Engine
+	config   *config.Config
 }
 
-func NewApiService(db types.IDB, cfg *config.Config) *ApiService {
+func NewApiService(dbEngine *xorm.Engine, cfg *config.Config) *ApiService {
 	return &ApiService{
-		db:     db,
-		config: cfg,
+		dbEngine: dbEngine,
+		config:   cfg,
 	}
 }
 
@@ -44,21 +43,18 @@ func (a *ApiService) Run() {
 		ctx.Next()
 	})
 
-	//验证token
-	r.Use(auth.MustExtractUser())
+	//验证token--先不验证token
+	//r.Use(auth.MustExtractUser())
 
-	//机构填入注册信息-apikey 和 secret--疑问：这里如何校验，杜绝冒充的抢先更新--本期先不做
 	//r.POST("/init", a.init)
-	//转账
-	r.POST("/transfer", a.transfer)
-	//提现
-	r.POST("/withdraw", a.withdraw)
-	//汇兑
-	r.POST("/exchange", a.exchange)
 	//下单
 	r.POST("/order", a.order)
+	//增加一条记录到users中
+	r.POST("/enroll", a.enroll)
 
-	logrus.Info("coin-manage run at " + a.config.Server.Port)
+	r.GET("/query", a.query)
+
+	logrus.Info("BGService un at " + a.config.Server.Port)
 
 	err := r.Run(fmt.Sprintf(":%s", a.config.Server.Port))
 	if err != nil {

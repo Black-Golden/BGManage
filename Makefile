@@ -2,12 +2,12 @@ all: build
 
 
 version := "1.0.0"
-dockerName := "reg.huiwang.io/fat/coin-manage"
+dockerName := "reg.spb.io/bg/bgservice"
 
 CURRENT_DIR=$(pwd)
 
-PROJ = coin-manage
-MODULE = "coin-manage"
+PROJ = bgservice
+MODULE = "bgservice"
 
 PKG = `go list ./... | grep -v /vendor/`
 
@@ -35,7 +35,7 @@ clean:
 	rm -rf bin
 
 build:
-	go build ${PKG_TAG} -o bin/coin-manage main.go
+	go build ${PKG_TAG} -o bin/bgservice main.go
     sudo docker build -t $(dockerName):$(version) .
     sudo docker push $(dockerName):$(version)
 
@@ -43,7 +43,7 @@ test: style cilint
 	go test -cover ./...
 
 server: clean 
-	${CROSS_COMPILE} go build -o bin/linux-amd64-coin-manage ${PKG_TAG} main.go
+	${CROSS_COMPILE} go build -o bin/linux-amd64-bgservice ${PKG_TAG} main.go
 
 
 .PHONY: build clean client

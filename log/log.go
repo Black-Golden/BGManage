@@ -72,12 +72,12 @@ func Init(name string, config *config.Config) error {
 		AddConsoleOut(config.Log.Stdout.Level)
 	}
 
-	if config.Log.File.Enable {
+	/*if config.Log.File.Enable {
 		err := AddFileOut(config.Log.File.Path, config.Log.File.Level, 5)
 		if err != nil {
 			return err
 		}
-	}
+	}*/
 
 	if config.Log.Kafka.Enable {
 		err := AddKafkaHook(config.Log.Kafka.Topic, config.Log.Kafka.Brokers, config.Log.Kafka.Level)

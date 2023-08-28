@@ -30,17 +30,11 @@ type Config struct {
 		Name     string `yaml:"name"`
 		Password string `yaml:"password"`
 		Ip       string `yaml:"ip"`
-		Port     string `yaml:"port"`
+		Port     int32  `yaml:"port"`
 		Database string `yaml:"database"`
-	}
-	Pri struct {
-		Value string `yaml:"value"`
 	}
 	Server struct {
 		Port string `yaml:"port"`
-	}
-	Access struct {
-		Pub string `yaml:"pub"`
 	}
 	Log struct {
 		Stdout stdout `mapstructure:"stdout"`
