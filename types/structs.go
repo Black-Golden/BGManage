@@ -1,6 +1,55 @@
 package types
 
-import "math/big"
+import (
+	"math/big"
+	"time"
+)
+
+type Users struct {
+	Uid                 string    `xorm:"f_uid"`
+	UserName            string    `xorm:"f_userName"`
+	Password            string    `xorm:"f_password"`
+	InvitationCode      string    `xorm:"f_invitationCode"`
+	InvitatedCode       string    `xorm:"f_invitatedCode"`
+	MailBox             string    `xorm:"f_mailBox"`
+	CreateTime          time.Time `xorm:"f_createTime"`
+	IsBindGoogle        bool      `xorm:"f_isBindGoogle "`
+	Secret              string    `xorm:"f_secret"`
+	IsIDVerify          bool      `xorm:"f_isIDVerify "`
+	Mobile              string    `xorm:"f_mobile"`
+	InviteNumber        int       `xorm:"f_inviteNumber"`
+	ClaimRewardNumber   int       `xorm:"f_claimRewardNumber "`
+	ConcernCoinList     string    `xorm:"f_concernCoinList"`
+	CollectStragetyList string    `xorm:"f_collectStragetyList"`
+	UpdateTime          time.Time `xorm:"f_updateTime"`
+}
+
+type Admin struct {
+	UserName   string    `xorm:"f_userName"`
+	Role       string    `xorm:"f_role"`
+	Password   string    `xorm:"f_password"`
+	CreateTime time.Time `xorm:"f_createTime"`
+	UpdateTime time.Time `xorm:"f_dateTime"`
+}
+
+type PayLoad struct {
+	UserName  string
+	Uid       string
+	StartTime string
+	EndTime   string
+}
+
+type Role struct {
+	RoleName  string
+	Authority string
+	StartTime string
+	EndTime   string
+}
+
+type LoginInput struct {
+	UserName string `json:"userName" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
 
 type Users struct {
 	Uid            string `xorm:"f_uid"`

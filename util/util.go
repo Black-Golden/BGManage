@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/ethereum/api-in/types"
 	"math/big"
 )
 
@@ -30,4 +31,12 @@ type HistoryInfo struct {
 type BlockRange struct {
 	BeginBlock *big.Int
 	EndBlock   *big.Int
+}
+
+func ResponseMsg(Code int, Message string, Data interface{}) types.HttpRes {
+	res := types.HttpRes{}
+	res.Code = Code
+	res.Message = Message
+	res.Data = Data
+	return res
 }

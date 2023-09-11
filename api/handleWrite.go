@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/ethereum/api-in/db"
 	"github.com/ethereum/api-in/types"
+	"github.com/ethereum/api-in/util"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
@@ -102,4 +103,131 @@ func (a *ApiService) enroll(c *gin.Context) {
 	res.Data = "null"
 
 	c.SecureJSON(http.StatusOK, res)
+}
+
+func (a *ApiService) login(c *gin.Context) {
+	var payload *types.LoginInput
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		logrus.Error(err)
+		res := util.ResponseMsg(-1, "fail", err.Error())
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+	var passWord string
+	// 获取数据库中的密码
+	err, has := db.QueryPassword(a.dbEngine, payload.UserName)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", "User does not exist.")
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+	if has != nil {
+		passWord = has.Password
+	}
+	//todo: 密文比较
+	if payload.Password != passWord {
+		res := util.ResponseMsg(-1, "fail", "Incorrect password.")
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+
+	res := util.ResponseMsg(0, "success", body)
+	c.SecureJSON(http.StatusOK, res)
+	return
+}
+
+func (a *ApiService) newAdmin(c *gin.Context) {
+	var admin *types.Admin
+
+	err := c.BindJSON(&admin)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+
+	user := types.Admin{
+		UserName: admin.UserName,
+		Role:     admin.Role,
+		Password: admin.Password,
+	}
+
+	err = db.InsertAdmin(a.dbEngine, &user)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+	res := util.ResponseMsg(0, "success", nil)
+	c.SecureJSON(http.StatusOK, res)
+	return
+}
+
+func (a *ApiService) editAdmin(c *gin.Context) {
+	var admin *types.Admin
+
+	err := c.BindJSON(&admin)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+
+	user := types.Admin{
+		UserName: admin.UserName,
+		Role:     admin.Role,
+		Password: admin.Password,
+	}
+
+	err = db.UpdateAdmin(a.dbEngine, &user)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+	res := util.ResponseMsg(0, "success", nil)
+	c.SecureJSON(http.StatusOK, res)
+	return
+}
+
+func (a *ApiService) newRole(c *gin.Context) {
+	var role *types.Role
+
+	err := c.BindJSON(&role)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+
+	err = db.InsertRole(a.dbEngine, role)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+	res := util.ResponseMsg(0, "success", nil)
+	c.SecureJSON(http.StatusOK, res)
+	return
+}
+
+func (a *ApiService) editRole(c *gin.Context) {
+	var role *types.Role
+
+	err := c.BindJSON(&role)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+
+	err = db.UpdateRole(a.dbEngine, role)
+	if err != nil {
+		res := util.ResponseMsg(-1, "fail", err)
+		c.SecureJSON(http.StatusOK, res)
+		return
+	}
+	res := util.ResponseMsg(0, "success", nil)
+	c.SecureJSON(http.StatusOK, res)
+	return
 }

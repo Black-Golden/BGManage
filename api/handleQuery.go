@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/ethereum/api-in/db"
 	"github.com/ethereum/api-in/types"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -58,4 +59,20 @@ func (a *ApiService) getCoinHistory(c *gin.Context) {
 	res.Message = "success"
 	res.Data = ""
 	c.SecureJSON(http.StatusOK, res)
+}
+
+// 根据前端传入的查询条件查询用户--状态先不加
+func (a *ApiService) getUser(c *gin.Context) {
+	userName := c.Query("userName")
+	uid := c.Query("uid")
+	startTime := c.Query("startTime")
+	endTime := c.Query("endTime")
+
+	payload := types.PayLoad{
+		UserName:  userName,
+		Uid:       uid,
+		StartTime: startTime,
+		EndTime:   endTime,
+	}
+	db.getUser(a.dbEngine, payload)
 }

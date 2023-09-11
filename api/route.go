@@ -46,13 +46,18 @@ func (a *ApiService) Run() {
 	//验证token--先不验证token
 	//r.Use(auth.MustExtractUser())
 
-	//r.POST("/init", a.init)
 	//下单
-	r.POST("/order", a.order)
+	r.POST("/login", a.login)
 	//增加一条记录到users中
-	r.POST("/enroll", a.enroll)
+	r.POST("/newAdmin", a.newAdmin) //插入后台管理员
 
-	r.GET("/query", a.query)
+	r.POST("/editAdmin", a.editAdmin)
+
+	r.GET("/getUser", a.getUser) //根据条件得到所有的前台用户
+
+	r.POST("/newRole", a.newRole) //新建角色
+
+	r.POST("/editRole", a.editRole) //编辑角色
 
 	logrus.Info("BGService un at " + a.config.Server.Port)
 

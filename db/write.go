@@ -5,6 +5,7 @@ import (
 	"github.com/ethereum/api-in/types"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
+	"github.com/sirupsen/logrus"
 	"log"
 )
 
@@ -20,6 +21,52 @@ func InsertUser(engine *xorm.Engine, user *types.Users) {
 		return
 	}
 	fmt.Println("插入成功")
+}
+
+func InsertAdmin(engine *xorm.Engine, admin *types.Admin) error {
+	rows, err := engine.Table("admins").Insert(admin)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	if rows == 0 {
+		fmt.Println("插入失败")
+		return errors.New("insert null")
+	}
+	fmt.Println("插入成功")
+	return nil
+}
+
+func InsertRole(engine *xorm.Engine, role *types.Role) error {
+	rows, err := engine.Table("role").Insert(role)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	if rows == 0 {
+		fmt.Println("插入失败")
+		return errors.New("insert null")
+	}
+	fmt.Println("插入成功")
+	return nil
+}
+
+func UpdateAdmin(engine *xorm.Engine, admin *types.Admin) error {
+	_, err := engine.Table("admins").Where("f_userName=?", admin.UserName).Update(admin)
+	if err != nil {
+		logrus.Error(err)
+		return err
+	}
+	return nil
+}
+
+func UpdateRole(engine *xorm.Engine, role *types.Role) error {
+	_, err := engine.Table("role").Where("f_roleName=?", role.RoleName).Update(role)
+	if err != nil {
+		logrus.Error(err)
+		return err
+	}
+	return nil
 }
 
 /*
